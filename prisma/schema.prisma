@@ -1,0 +1,569 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  PROVIDER
+  ADMIN
+}
+
+enum ProviderType {
+  VERIFIED_BUSINESS
+  VERIFIED_INDEPENDENT
+}
+
+enum ProviderStatus {
+  DRAFT
+  PENDING_OUTREACH
+  PENDING_APPROVAL
+  APPROVED
+  LIVE
+  DECLINED
+  SUSPENDED
+}
+
+enum SubscriptionPlan {
+  BASIC
+  SPOTLIGHT
+  PREMIUM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+enum PaymentRequirement {
+  DEPOSIT_REQUIRED
+  FULL_PREPAY
+}
+
+enum PaymentOption {
+  DEPOSIT
+  FULL_PREPAY
+}
+
+enum DepositType {
+  NONE
+  FIXED
+  PERCENTAGE
+}
+
+enum CancellationPolicy {
+  FLEXIBLE
+  STANDARD
+  STRICT
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  COMPLETED
+  CANCELED
+  RESCHEDULED
+  DISPUTED
+}
+
+enum PaymentStatus {
+  HELD
+  SUCCEEDED
+  RELEASED
+  REFUNDED
+  FAILED
+}
+
+enum PaymentKind {
+  DEPOSIT
+  FULL_PREPAY
+  BALANCE
+}
+
+enum PayoutStatus {
+  SCHEDULED
+  HELD
+  RELEASED
+  WITHHELD
+}
+
+enum DisputeStatus {
+  OPEN
+  REVIEWING
+  RESOLVED
+  REFUNDED
+  DISMISSED
+}
+
+enum FeaturedSurface {
+  HOMEPAGE_POPULAR
+  HOMEPAGE_STUDENT_FAVORITES
+  HOMEPAGE_AFFORDABLE
+  HOMEPAGE_TOP_TRUSTED
+  HOMEPAGE_LAST_MINUTE
+  SEARCH_SPOTLIGHT
+}
+
+enum TrustSignalType {
+  IDENTITY
+  PROFILE
+  PORTFOLIO
+  BOOKINGS
+  REVIEWS
+  RESPONSE
+  CANCELLATION
+  DISPUTE
+  REPEAT
+  NO_SHOW
+}
+
+enum AdminNoteScope {
+  PROVIDER
+  BOOKING
+  CLAIM
+  GENERAL
+}
+
+enum ClaimStatus {
+  NEW
+  CONTACTED
+  UNDER_REVIEW
+  APPROVED
+  DECLINED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  DECLINED
+}
+
+enum OutreachStatus {
+  DISCOVERED
+  CONTACTED
+  INTERESTED
+  CLAIMED
+  APPROVED
+}
+
+model School {
+  id             String                @id @default(cuid())
+  name           String
+  slug           String                @unique
+  city           String
+  state          String
+  campusArea     String
+  isLaunchMarket Boolean               @default(false)
+  launchOrder    Int                   @default(0)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  users          User[]
+  providers      Provider[]
+  applications   ProviderApplication[]
+  claimRequests  ClaimRequest[]
+  outreachLeads  OutreachLead[]
+}
+
+model User {
+  id                    String                @id @default(cuid())
+  role                  UserRole              @default(USER)
+  firstName             String
+  lastName              String
+  email                 String                @unique
+  passwordHash          String
+  phone                 String?
+  avatarSeed            String?
+  bio                   String?
+  schoolId              String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  school                School?               @relation(fields: [schoolId], references: [id])
+  ownedProvider         Provider?             @relation("ProviderOwner")
+  bookings              Booking[]
+  reviews               Review[]
+  savedProviders        SavedProvider[]
+  applicationsSubmitted ProviderApplication[] @relation("ApplicationSubmittedBy")
+  claimRequestsSubmitted ClaimRequest[]       @relation("ClaimSubmittedBy")
+  authoredNotes         AdminNote[]           @relation("AdminNoteAuthor")
+}
+
+model Provider {
+  id                     String              @id @default(cuid())
+  slug                   String              @unique
+  name                   String
+  providerType           ProviderType
+  status                 ProviderStatus      @default(DRAFT)
+  schoolId               String
+  ownerId                String?             @unique
+  plan                   SubscriptionPlan    @default(BASIC)
+  headline               String
+  shortDescription       String
+  story                  String
+  approximateArea        String
+  neighborhood           String
+  privateAddress         String?
+  distanceMiles          Float
+  serviceRadiusMiles     Float?
+  yearsExperience        Int
+  isMobileService        Boolean             @default(false)
+  acceptsNewClients      Boolean             @default(true)
+  claimable              Boolean             @default(false)
+  identityVerified       Boolean             @default(false)
+  portfolioReviewed      Boolean             @default(false)
+  responseTimeMinutes    Int
+  profileCompleteness    Int
+  portfolioQuality       Int
+  completedBookingsCount Int                 @default(0)
+  reviewAverage          Float               @default(0)
+  reviewCount            Int                 @default(0)
+  cancellationRate       Float               @default(0)
+  disputeRate            Float               @default(0)
+  repeatBookingRate      Float               @default(0)
+  noShowRate             Float               @default(0)
+  conversionRate         Float               @default(0)
+  trustScore             Float               @default(0)
+  rankingBoost           Float               @default(0)
+  featuredWeight         Int                 @default(0)
+  startingPriceCents     Int
+  coverTone              String
+  accentTone             String
+  cancellationPolicy     CancellationPolicy
+  payoutReleaseDays      Int                 @default(2)
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  school                 School              @relation(fields: [schoolId], references: [id])
+  owner                  User?               @relation("ProviderOwner", fields: [ownerId], references: [id])
+  photos                 ProviderPhoto[]
+  services               Service[]
+  availabilitySlots      AvailabilitySlot[]
+  bookings               Booking[]
+  reviews                Review[]
+  payouts                Payout[]
+  trustSignals           TrustSignal[]
+  subscription           Subscription?
+  featuredPlacements     FeaturedPlacement[]
+  savedBy                SavedProvider[]
+  adminNotes             AdminNote[]
+  claimRequests          ClaimRequest[]
+  outreachLeads          OutreachLead[]
+
+  @@index([schoolId, status])
+  @@index([providerType, status])
+  @@index([plan, status])
+}
+
+model ProviderPhoto {
+  id          String   @id @default(cuid())
+  providerId  String
+  title       String
+  caption     String
+  gradientFrom String
+  gradientTo  String
+  accentTone  String
+  kind        String
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  provider    Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, sortOrder])
+}
+
+model ServiceCategory {
+  id                   String    @id @default(cuid())
+  slug                 String    @unique
+  name                 String
+  description          String
+  icon                 String
+  isHighTier           Boolean   @default(false)
+  availableToIndependent Boolean @default(true)
+  sortOrder            Int       @default(0)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  services             Service[]
+}
+
+model Service {
+  id                 String             @id @default(cuid())
+  providerId         String
+  categoryId         String
+  name               String
+  description        String
+  durationMinutes    Int
+  priceCents         Int
+  paymentRequirement PaymentRequirement
+  depositType        DepositType        @default(NONE)
+  depositValue       Int                @default(0)
+  isFeatured         Boolean            @default(false)
+  popularityRank     Int                @default(0)
+  studentPerk        String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  provider           Provider           @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  category           ServiceCategory    @relation(fields: [categoryId], references: [id])
+  bookings           Booking[]
+  availabilitySlots  AvailabilitySlot[]
+
+  @@index([providerId, categoryId])
+}
+
+model AvailabilitySlot {
+  id         String    @id @default(cuid())
+  providerId String
+  serviceId  String?
+  startsAt   DateTime
+  endsAt     DateTime
+  isBooked   Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  provider   Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  service    Service?  @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  booking    Booking?  @relation("BookingSlot")
+
+  @@index([providerId, startsAt, isBooked])
+}
+
+model Booking {
+  id                  String           @id @default(cuid())
+  reference           String           @unique
+  userId              String
+  providerId          String
+  serviceId           String
+  slotId              String?          @unique
+  status              BookingStatus
+  paymentOption       PaymentOption
+  appointmentStart    DateTime
+  appointmentEnd      DateTime
+  notes               String?
+  priceCents          Int
+  chargeNowCents      Int
+  remainingDueCents   Int              @default(0)
+  platformFeeRate     Float
+  platformFeeCents    Int
+  providerPayoutCents Int
+  areaSnapshot        String
+  mobileSnapshot      Boolean          @default(false)
+  cancellationPolicy  CancellationPolicy
+  cancellationDeadline DateTime
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  canceledAt          DateTime?
+  completedAt         DateTime?
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider            Provider         @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  service             Service          @relation(fields: [serviceId], references: [id])
+  slot                AvailabilitySlot? @relation("BookingSlot", fields: [slotId], references: [id], onDelete: SetNull)
+  paymentRecords      PaymentRecord[]
+  payout              Payout?
+  dispute             Dispute?
+  review              Review?
+  adminNotes          AdminNote[]
+
+  @@index([userId, status])
+  @@index([providerId, status])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  userId      String
+  providerId  String
+  rating      Int
+  title       String
+  body        String
+  wouldRebook Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider    Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, createdAt])
+}
+
+model PaymentRecord {
+  id                String        @id @default(cuid())
+  bookingId         String
+  kind              PaymentKind
+  status            PaymentStatus
+  amountCents       Int
+  mockBrand         String
+  mockLast4         String
+  externalReference String
+  createdAt         DateTime      @default(now())
+  releasedAt        DateTime?
+  refundedAt        DateTime?
+  booking           Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, status])
+}
+
+model Payout {
+  id              String       @id @default(cuid())
+  providerId      String
+  bookingId       String       @unique
+  status          PayoutStatus
+  grossAmountCents Int
+  feeAmountCents  Int
+  netAmountCents  Int
+  scheduledFor    DateTime
+  releasedAt      DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  provider        Provider     @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  booking         Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, status])
+}
+
+model Subscription {
+  id               String             @id @default(cuid())
+  providerId       String             @unique
+  plan             SubscriptionPlan
+  status           SubscriptionStatus @default(ACTIVE)
+  monthlyPriceCents Int
+  startsAt         DateTime           @default(now())
+  renewsAt         DateTime
+  analyticsNote    String?
+  provider         Provider           @relation(fields: [providerId], references: [id], onDelete: Cascade)
+}
+
+model TrustSignal {
+  id         String          @id @default(cuid())
+  providerId String
+  type       TrustSignalType
+  label      String
+  value      String
+  note       String
+  isPublic   Boolean         @default(true)
+  sortOrder  Int             @default(0)
+  provider   Provider        @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, sortOrder])
+}
+
+model SavedProvider {
+  userId     String
+  providerId String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@id([userId, providerId])
+  @@index([providerId])
+}
+
+model AdminNote {
+  id             String         @id @default(cuid())
+  authorId       String
+  scope          AdminNoteScope
+  providerId     String?
+  bookingId      String?
+  claimRequestId String?
+  title          String
+  body           String
+  createdAt      DateTime       @default(now())
+  author         User           @relation("AdminNoteAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  provider       Provider?      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  booking        Booking?       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  claimRequest   ClaimRequest?  @relation(fields: [claimRequestId], references: [id], onDelete: Cascade)
+}
+
+model Dispute {
+  id                String        @id @default(cuid())
+  bookingId         String        @unique
+  status            DisputeStatus
+  reason            String
+  resolutionSummary String?
+  openedAt          DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  booking           Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model FeaturedPlacement {
+  id         String          @id @default(cuid())
+  providerId String
+  surface    FeaturedSurface
+  label      String
+  sortOrder  Int             @default(0)
+  active     Boolean         @default(true)
+  startsAt   DateTime?
+  endsAt     DateTime?
+  provider   Provider        @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([surface, active, sortOrder])
+}
+
+model ClaimRequest {
+  id                String       @id @default(cuid())
+  schoolId          String
+  providerId        String?
+  submittedByUserId String?
+  claimantName      String
+  claimantEmail     String
+  businessName      String
+  instagramHandle   String?
+  note              String
+  status            ClaimStatus  @default(NEW)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  school            School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  provider          Provider?    @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  submittedBy       User?        @relation("ClaimSubmittedBy", fields: [submittedByUserId], references: [id], onDelete: SetNull)
+  adminNotes        AdminNote[]
+}
+
+model ProviderApplication {
+  id               String            @id @default(cuid())
+  schoolId         String
+  applicantUserId  String?
+  businessName     String
+  providerType     ProviderType
+  mobileService    Boolean           @default(false)
+  email            String
+  phone            String
+  cityArea         String
+  categoriesCsv    String
+  portfolioSummary String
+  note             String
+  status           ApplicationStatus @default(DRAFT)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  school           School            @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  applicant        User?             @relation("ApplicationSubmittedBy", fields: [applicantUserId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+}
+
+model OutreachLead {
+  id            String         @id @default(cuid())
+  schoolId      String
+  providerId    String?
+  businessName  String
+  contactName   String?
+  contactChannel String
+  categoryFocus String
+  neighborhood  String
+  status        OutreachStatus @default(DISCOVERED)
+  note          String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  school        School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  provider      Provider?      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  reason    String
+  message   String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
