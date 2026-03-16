@@ -11,8 +11,7 @@ services:
     plan: free
     autoDeploy: true
     healthCheckPath: /
-    buildCommand: npm ci && npx prisma generate && npm run build
-    preDeployCommand: npx prisma db push && npm run db:seed:if-empty
+    buildCommand: npm ci && npx prisma generate && npx prisma db push && npm run db:seed:if-empty && npm run build
     startCommand: npm run start
     envVars:
       - key: DATABASE_URL
