@@ -1,6 +1,6 @@
-# Copper Glow Marketplace
+# Aurelle Marketplace
 
-Copper Glow is a production-style, mobile-first beauty and self-care booking marketplace designed to launch market by market. The demo currently opens around the University of Arizona, with seeded local data, mocked booking and payout flows, student and provider dashboards, and an internal admin workspace so the full product can be previewed locally without third-party credentials.
+Aurelle is a production-style, mobile-first beauty and self-care booking marketplace designed to launch market by market. The demo currently opens around the University of Arizona, with seeded local data, mocked booking and payout flows, student and provider dashboards, and an internal admin workspace so the full product can be previewed locally without third-party credentials.
 
 ## Stack
 
@@ -38,7 +38,7 @@ macOS with Homebrew:
 ```bash
 brew install postgresql@17
 brew services start postgresql@17
-createdb copper_glow
+createdb aurelle
 ```
 
 3. Copy the environment template:
@@ -63,9 +63,9 @@ npm run dev
 
 ## Demo accounts
 
-- Student: `mia@copperglow.demo` / `demo1234`
-- Provider: `provider@copperglow.demo` / `demo1234`
-- Admin: `admin@copperglow.demo` / `demo1234`
+- Student: `mia@aurelle.demo` / `demo1234`
+- Provider: `provider@aurelle.demo` / `demo1234`
+- Admin: `admin@aurelle.demo` / `demo1234`
 
 The sign-in screen also includes one-click demo account shortcuts.
 
@@ -81,6 +81,7 @@ The sign-in screen also includes one-click demo account shortcuts.
 - `npm run dev` starts the local app
 - `npm run lint` runs ESLint
 - `npm run build` creates a production build
+- `npm run verify` runs lint + production build together
 - `npm run db:setup` rebuilds the local schema and reseeds demo data
 - `npm run db:push` applies the schema without reseeding
 - `npm run db:seed` reruns only the seed script

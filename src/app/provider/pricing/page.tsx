@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { updateProviderPlanFormAction } from "@/actions";
 import { FormSubmitButton } from "@/components/ui/form-submit-button";
 import { requireProvider } from "@/lib/auth";
@@ -23,6 +24,13 @@ const plans = [
     description: "Stronger placement, homepage feature eligibility, richer analytics, promo tools, and the strongest profile presentation.",
   },
 ];
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function ProviderPricingPage() {
   const user = await requireProvider();

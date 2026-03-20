@@ -6,7 +6,7 @@ export default function AboutPage() {
     <PageShell
       eyebrow="About"
       title="A local marketplace built to make beauty booking feel safer and sharper."
-      description="Copper Glow started with a simple observation: students were already booking beauty services through screenshots, DMs, and half-verified word of mouth. The market was active, but trust was still fragmented."
+      description="Aurelle started with a simple observation: students were already booking beauty services through screenshots, DMs, and half-verified word of mouth. The market was active, but trust was still fragmented."
     >
       <div className="grid gap-6 lg:grid-cols-2">
         <article className="rounded-[30px] border border-white/60 bg-white/90 p-6 shadow-[0_18px_40px_rgba(42,29,24,0.06)]">
@@ -29,7 +29,7 @@ export default function AboutPage() {
         <article className="rounded-[30px] border border-white/60 bg-white/90 p-6 shadow-[0_18px_40px_rgba(42,29,24,0.06)] lg:col-span-2">
           <h2 className="font-display text-3xl tracking-[-0.05em] text-[color:var(--color-ink)]">How the brand shows up</h2>
           <p className="mt-3 text-sm leading-8 text-[color:var(--color-ink-muted)]">
-            Copper Glow is feminine but modern, visual without feeling noisy, and premium without feeling
+            Aurelle is feminine but modern, visual without feeling noisy, and premium without feeling
             exclusive. That means polished copy, trustworthy interaction design, and systems that make local
             launch feel real from day one while still reading like a brand that can travel well into future
             cities, campuses, and neighborhood-based markets.

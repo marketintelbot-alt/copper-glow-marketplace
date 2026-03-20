@@ -36,7 +36,7 @@ export function BrandMark({ className, compact = false, tone = "default" }: Prop
             tone === "footer" ? "text-[rgba(255,245,248,0.96)]" : "text-[color:var(--color-ink)]"
           )}
         >
-          CG
+          {siteConfig.initials}
         </span>
       </span>
       <span className="flex flex-col">

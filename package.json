@@ -1,5 +1,5 @@
 {
-  "name": "copper-glow-marketplace",
+  "name": "aurelle-marketplace",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "verify": "npm run lint && npm run build",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts --reset",

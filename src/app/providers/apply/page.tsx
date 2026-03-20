@@ -11,7 +11,7 @@ export default function ProviderApplyPage() {
             For providers
           </p>
           <h1 className="mt-4 font-display text-5xl tracking-[-0.06em] text-[color:var(--color-ink)]">
-            Apply to join Copper Glow as the marketplace expands.
+            Apply to join Aurelle as the marketplace expands.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-8 text-[color:var(--color-ink-muted)]">
             We are launching first around {siteConfig.launchMarket.name} with a trust-first marketplace

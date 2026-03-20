@@ -23,12 +23,23 @@ import {
 } from "@prisma/client";
 import { addDays, addHours, addMinutes, addMonths, startOfDay } from "date-fns";
 import { scryptSync } from "node:crypto";
+import { siteConfig } from "../src/lib/site";
 
 const prisma = new PrismaClient();
 const DEMO_PASSWORD = "demo1234";
+const DEMO_DOMAIN = siteConfig.demoDomain;
+const BOOKING_PREFIX = siteConfig.bookingReferencePrefix;
 const args = new Set(process.argv.slice(2));
 const resetMode = args.has("--reset");
 const seedIfEmpty = args.has("--if-empty");
+
+function demoEmail(localPart: string) {
+  return `${localPart}@${DEMO_DOMAIN}`;
+}
+
+function bookingReference(suffix: string) {
+  return `${BOOKING_PREFIX}-${suffix}`;
+}
 
 type SeedService = {
   category: string;
@@ -196,7 +207,7 @@ const categorySeeds = [
 
 const userSeeds = [
   {
-    email: "mia@copperglow.demo",
+    email: demoEmail("mia"),
     firstName: "Mia",
     lastName: "Ramirez",
     role: UserRole.USER,
@@ -205,7 +216,7 @@ const userSeeds = [
     avatarSeed: "mia-ramirez",
   },
   {
-    email: "ava@copperglow.demo",
+    email: demoEmail("ava"),
     firstName: "Ava",
     lastName: "Patel",
     role: UserRole.USER,
@@ -214,7 +225,7 @@ const userSeeds = [
     avatarSeed: "ava-patel",
   },
   {
-    email: "camila@copperglow.demo",
+    email: demoEmail("camila"),
     firstName: "Camila",
     lastName: "Soto",
     role: UserRole.USER,
@@ -223,7 +234,7 @@ const userSeeds = [
     avatarSeed: "camila-soto",
   },
   {
-    email: "nina@copperglow.demo",
+    email: demoEmail("nina"),
     firstName: "Nina",
     lastName: "Huang",
     role: UserRole.USER,
@@ -232,7 +243,7 @@ const userSeeds = [
     avatarSeed: "nina-huang",
   },
   {
-    email: "zoe@copperglow.demo",
+    email: demoEmail("zoe"),
     firstName: "Zoe",
     lastName: "Miller",
     role: UserRole.USER,
@@ -241,7 +252,7 @@ const userSeeds = [
     avatarSeed: "zoe-miller",
   },
   {
-    email: "provider@copperglow.demo",
+    email: demoEmail("provider"),
     firstName: "Jasmin",
     lastName: "Ortega",
     role: UserRole.PROVIDER,
@@ -250,12 +261,12 @@ const userSeeds = [
     avatarSeed: "jasmin-ortega",
   },
   {
-    email: "admin@copperglow.demo",
+    email: demoEmail("admin"),
     firstName: "Taylor",
     lastName: "Brooks",
     role: UserRole.ADMIN,
     phone: "(520) 555-0108",
-    bio: "Launch operations lead for Copper Glow.",
+    bio: "Launch operations lead for Aurelle.",
     avatarSeed: "taylor-brooks",
   },
 ];
@@ -305,7 +316,7 @@ const providerSeeds: SeedProvider[] = [
     providerType: ProviderType.VERIFIED_BUSINESS,
     status: ProviderStatus.LIVE,
     plan: SubscriptionPlan.SPOTLIGHT,
-    ownerEmail: "provider@copperglow.demo",
+    ownerEmail: demoEmail("provider"),
     headline: "Structured gel, soft nudes, and dependable timing for busy student schedules.",
     shortDescription:
       "A warm, detail-oriented nail lounge with elevated basics, clean art, and fast fills.",
@@ -982,8 +993,8 @@ const providerSeeds: SeedProvider[] = [
 
 const bookingSeeds: BookingSeed[] = [
   {
-    reference: "CG-2401",
-    userEmail: "mia@copperglow.demo",
+    reference: bookingReference("2401"),
+    userEmail: demoEmail("mia"),
     providerSlug: "sonoran-silk-studio",
     serviceName: "Gloss + Blowout",
     status: "CONFIRMED",
@@ -993,8 +1004,8 @@ const bookingSeeds: BookingSeed[] = [
     mockLast4: "4242",
   },
   {
-    reference: "CG-2402",
-    userEmail: "mia@copperglow.demo",
+    reference: bookingReference("2402"),
+    userEmail: demoEmail("mia"),
     providerSlug: "mesa-muse-mobile-tan",
     serviceName: "On-Site Rapid Tan",
     status: "CONFIRMED",
@@ -1004,8 +1015,8 @@ const bookingSeeds: BookingSeed[] = [
     mockLast4: "1881",
   },
   {
-    reference: "CG-2403",
-    userEmail: "mia@copperglow.demo",
+    reference: bookingReference("2403"),
+    userEmail: demoEmail("mia"),
     providerSlug: "copper-bloom-nails",
     serviceName: "Structured Gel Full Set",
     status: "COMPLETED",
@@ -1019,8 +1030,8 @@ const bookingSeeds: BookingSeed[] = [
     },
   },
   {
-    reference: "CG-2404",
-    userEmail: "mia@copperglow.demo",
+    reference: bookingReference("2404"),
+    userEmail: demoEmail("mia"),
     providerSlug: "luna-lash-lab",
     serviceName: "Hybrid Full Set",
     status: "COMPLETED",
@@ -1034,8 +1045,8 @@ const bookingSeeds: BookingSeed[] = [
     },
   },
   {
-    reference: "CG-2405",
-    userEmail: "mia@copperglow.demo",
+    reference: bookingReference("2405"),
+    userEmail: demoEmail("mia"),
     providerSlug: "scout-and-sage-wax-bar",
     serviceName: "Brow Wax + Shape",
     status: "COMPLETED",
@@ -1044,8 +1055,8 @@ const bookingSeeds: BookingSeed[] = [
     mockLast4: "1881",
   },
   {
-    reference: "CG-2406",
-    userEmail: "ava@copperglow.demo",
+    reference: bookingReference("2406"),
+    userEmail: demoEmail("ava"),
     providerSlug: "halo-house-beauty-bus",
     serviceName: "Dorm Blowout",
     status: "CONFIRMED",
@@ -1055,8 +1066,8 @@ const bookingSeeds: BookingSeed[] = [
     mockLast4: "9922",
   },
   {
-    reference: "CG-2407",
-    userEmail: "camila@copperglow.demo",
+    reference: bookingReference("2407"),
+    userEmail: demoEmail("camila"),
     providerSlug: "cielo-med-aesthetics",
     serviceName: "Barrier Reset Facial",
     status: "COMPLETED",
@@ -1070,8 +1081,8 @@ const bookingSeeds: BookingSeed[] = [
     },
   },
   {
-    reference: "CG-2408",
-    userEmail: "nina@copperglow.demo",
+    reference: bookingReference("2408"),
+    userEmail: demoEmail("nina"),
     providerSlug: "velvet-prickly-nail-lounge",
     serviceName: "Editorial Sculpted Set",
     status: "COMPLETED",
@@ -1085,8 +1096,8 @@ const bookingSeeds: BookingSeed[] = [
     },
   },
   {
-    reference: "CG-2409",
-    userEmail: "zoe@copperglow.demo",
+    reference: bookingReference("2409"),
+    userEmail: demoEmail("zoe"),
     providerSlug: "campus-glow-skin-clinic",
     serviceName: "Dermaplane + Hydration",
     status: "COMPLETED",
@@ -1100,8 +1111,8 @@ const bookingSeeds: BookingSeed[] = [
     },
   },
   {
-    reference: "CG-2410",
-    userEmail: "camila@copperglow.demo",
+    reference: bookingReference("2410"),
+    userEmail: demoEmail("camila"),
     providerSlug: "desert-veil-tans",
     serviceName: "Classic Weekend Glow",
     status: "CANCELED",
@@ -1110,8 +1121,8 @@ const bookingSeeds: BookingSeed[] = [
     mockLast4: "9090",
   },
   {
-    reference: "CG-2411",
-    userEmail: "ava@copperglow.demo",
+    reference: bookingReference("2411"),
+    userEmail: demoEmail("ava"),
     providerSlug: "rosewater-aesthetic-bar",
     serviceName: "Chemical Peel Review",
     status: "DISPUTED",
@@ -1124,8 +1135,8 @@ const bookingSeeds: BookingSeed[] = [
     },
   },
   {
-    reference: "CG-2412",
-    userEmail: "mia@copperglow.demo",
+    reference: bookingReference("2412"),
+    userEmail: demoEmail("mia"),
     providerSlug: "sunroom-brow-atelier",
     serviceName: "Shape + Tint",
     status: "COMPLETED",
@@ -1186,7 +1197,7 @@ async function main() {
   await seedAdminNotes(providers, users);
   await seedContactMessages();
 
-  console.log("Seeded Copper Glow marketplace");
+  console.log("Seeded Aurelle marketplace");
   console.log(`Live providers: ${providerSeeds.filter((provider) => provider.status === ProviderStatus.LIVE).length}`);
   console.log(`Demo login password for all seed users: ${DEMO_PASSWORD}`);
 }
@@ -1488,11 +1499,11 @@ async function seedPipelineData(
       },
       {
         schoolId,
-        applicantUserId: users.get("provider@copperglow.demo")?.id,
+        applicantUserId: users.get(demoEmail("provider"))?.id,
         businessName: "Halo House Expansion",
         providerType: ProviderType.VERIFIED_INDEPENDENT,
         mobileService: true,
-        email: "provider@copperglow.demo",
+        email: demoEmail("provider"),
         phone: "(520) 555-0122",
         cityArea: "U of A radius",
         categoriesCsv: "hair,brows",
@@ -1725,8 +1736,8 @@ async function seedSavedProviders(
   providers: Map<string, { id: string }>,
   users: Map<string, { id: string }>
 ) {
-  const mia = users.get("mia@copperglow.demo");
-  const ava = users.get("ava@copperglow.demo");
+  const mia = users.get(demoEmail("mia"));
+  const ava = users.get(demoEmail("ava"));
 
   if (!mia || !ava) {
     return;
@@ -1748,12 +1759,12 @@ async function seedAdminNotes(
   providers: Map<string, { id: string }>,
   users: Map<string, { id: string }>
 ) {
-  const adminId = users.get("admin@copperglow.demo")?.id;
+  const adminId = users.get(demoEmail("admin"))?.id;
   if (!adminId) {
     return;
   }
 
-  const disputedBooking = await prisma.booking.findUnique({ where: { reference: "CG-2411" } });
+  const disputedBooking = await prisma.booking.findUnique({ where: { reference: bookingReference("2411") } });
   const sonoranClaim = await prisma.claimRequest.findFirst({
     where: { businessName: "Sonoran Silk Studio" },
   });
@@ -1845,7 +1856,7 @@ function buildPhotos(name: string, coverTone: string, accentTone: string, catego
     },
     {
       title: "Verified portfolio review",
-      caption: `Copper Glow reviewed texture, lighting, and result consistency across recent client work.`,
+      caption: `Aurelle reviewed texture, lighting, and result consistency across recent client work.`,
       gradientFrom: accentTone,
       gradientTo: mixHex(accentTone, "#F7F2EE", 0.56),
       kind: "detail",
@@ -1899,7 +1910,7 @@ function buildTrustSignals(provider: SeedProvider, trustScore: number) {
       label: "Portfolio reviewed",
       value: provider.portfolioReviewed ? "Approved" : "Pending",
       note: provider.portfolioReviewed
-        ? "Portfolio quality and result consistency have been reviewed by Copper Glow."
+        ? "Portfolio quality and result consistency have been reviewed by Aurelle."
         : "Portfolio review must finish before public launch.",
       isPublic: true,
       sortOrder: 2,
@@ -2015,7 +2026,7 @@ function validateProviderCategories(
 }
 
 function hashPassword(password: string) {
-  return scryptSync(password, "copper-glow-demo-salt", 64).toString("hex");
+  return scryptSync(password, "aurelle-demo-salt", 64).toString("hex");
 }
 
 function toCents(value: number) {

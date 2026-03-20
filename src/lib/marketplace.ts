@@ -13,7 +13,84 @@ import { addHours, endOfDay, isSameDay, parseISO, startOfDay } from "date-fns";
 import { prisma } from "@/lib/db";
 import { clamp, unique } from "@/lib/utils";
 
-const providerPublicInclude = {
+const publicReviewUserSelect = {
+  firstName: true,
+  lastName: true,
+  avatarSeed: true,
+} satisfies Prisma.UserSelect;
+
+const internalUserSelect = {
+  id: true,
+  firstName: true,
+  lastName: true,
+  email: true,
+  phone: true,
+  avatarSeed: true,
+} satisfies Prisma.UserSelect;
+
+const providerPreviewSelect = {
+  id: true,
+  slug: true,
+  name: true,
+  providerType: true,
+  approximateArea: true,
+  distanceMiles: true,
+  isMobileService: true,
+  photos: {
+    orderBy: { sortOrder: "asc" },
+    take: 1,
+  },
+  availabilitySlots: {
+    where: {
+      startsAt: { gte: new Date() },
+      isBooked: false,
+    },
+    orderBy: { startsAt: "asc" },
+    take: 4,
+  },
+} satisfies Prisma.ProviderSelect;
+
+const providerPublicSelect = {
+  id: true,
+  slug: true,
+  name: true,
+  providerType: true,
+  status: true,
+  schoolId: true,
+  plan: true,
+  headline: true,
+  shortDescription: true,
+  story: true,
+  approximateArea: true,
+  neighborhood: true,
+  distanceMiles: true,
+  serviceRadiusMiles: true,
+  yearsExperience: true,
+  isMobileService: true,
+  acceptsNewClients: true,
+  identityVerified: true,
+  portfolioReviewed: true,
+  responseTimeMinutes: true,
+  profileCompleteness: true,
+  portfolioQuality: true,
+  completedBookingsCount: true,
+  reviewAverage: true,
+  reviewCount: true,
+  cancellationRate: true,
+  disputeRate: true,
+  repeatBookingRate: true,
+  noShowRate: true,
+  conversionRate: true,
+  trustScore: true,
+  rankingBoost: true,
+  featuredWeight: true,
+  startingPriceCents: true,
+  coverTone: true,
+  accentTone: true,
+  cancellationPolicy: true,
+  payoutReleaseDays: true,
+  createdAt: true,
+  updatedAt: true,
   photos: {
     orderBy: { sortOrder: "asc" },
   },
@@ -24,13 +101,24 @@ const providerPublicInclude = {
     orderBy: [{ isFeatured: "desc" }, { popularityRank: "asc" }, { priceCents: "asc" }],
   },
   trustSignals: {
+    where: {
+      isPublic: true,
+    },
     orderBy: { sortOrder: "asc" },
   },
   reviews: {
     orderBy: { createdAt: "desc" },
     take: 6,
-    include: {
-      user: true,
+    select: {
+      id: true,
+      title: true,
+      body: true,
+      rating: true,
+      createdAt: true,
+      wouldRebook: true,
+      user: {
+        select: publicReviewUserSelect,
+      },
     },
   },
   availabilitySlots: {
@@ -49,16 +137,16 @@ const providerPublicInclude = {
   },
   subscription: true,
   school: true,
-} satisfies Prisma.ProviderInclude;
+} satisfies Prisma.ProviderSelect;
 
 export type PublicProvider = Prisma.ProviderGetPayload<{
-  include: typeof providerPublicInclude;
+  select: typeof providerPublicSelect;
 }>;
 
 const accountBookingInclude = {
   provider: {
-    include: {
-      photos: { orderBy: { sortOrder: "asc" }, take: 1 },
+    select: {
+      ...providerPreviewSelect,
       availabilitySlots: {
         where: {
           startsAt: { gte: new Date() },
@@ -94,7 +182,9 @@ const providerDashboardInclude = {
   },
   bookings: {
     include: {
-      user: true,
+      user: {
+        select: internalUserSelect,
+      },
       service: {
         include: { category: true },
       },
@@ -107,7 +197,9 @@ const providerDashboardInclude = {
   },
   reviews: {
     include: {
-      user: true,
+      user: {
+        select: publicReviewUserSelect,
+      },
       booking: true,
     },
     orderBy: { createdAt: "desc" },
@@ -146,7 +238,7 @@ export async function getPublicProviders() {
         isLaunchMarket: true,
       },
     },
-    include: providerPublicInclude,
+    select: providerPublicSelect,
   });
 }
 
@@ -417,8 +509,8 @@ export async function getProviderPageData(slug: string, viewerId?: string | null
         slug,
         status: ProviderStatus.LIVE,
       },
-      include: {
-        ...providerPublicInclude,
+      select: {
+        ...providerPublicSelect,
         bookings: {
           orderBy: { appointmentStart: "desc" },
           take: 12,
@@ -489,9 +581,10 @@ export async function getAccountPageData(userId: string) {
     where: { id: userId },
     include: {
       savedProviders: {
-        include: {
+        select: {
+          providerId: true,
           provider: {
-            include: providerPublicInclude,
+            select: providerPublicSelect,
           },
         },
       },
@@ -579,7 +672,9 @@ export async function getAdminDashboardData() {
           booking: {
             include: {
               provider: true,
-              user: true,
+              user: {
+                select: internalUserSelect,
+              },
               service: true,
             },
           },
@@ -593,7 +688,9 @@ export async function getAdminDashboardData() {
       prisma.booking.findMany({
         include: {
           provider: true,
-          user: true,
+          user: {
+            select: internalUserSelect,
+          },
           service: true,
           paymentRecords: true,
           payout: true,

@@ -6,8 +6,8 @@ const appUrl =
   "http://localhost:3000";
 
 const config: CapacitorConfig = {
-  appId: "com.copperglow.marketplace",
-  appName: "Copper Glow",
+  appId: "com.aurelle.marketplace",
+  appName: "Aurelle",
   webDir: ".next",
   server: {
     url: appUrl,

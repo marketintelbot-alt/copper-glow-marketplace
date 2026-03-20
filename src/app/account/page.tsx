@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { signOutAction } from "@/actions";
 import { BookingActions } from "@/components/booking-actions";
@@ -9,6 +10,13 @@ import { Button } from "@/components/ui/button";
 import { requireUser } from "@/lib/auth";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import { getAccountPageData } from "@/lib/marketplace";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AccountPage() {
   const user = await requireUser("/account");

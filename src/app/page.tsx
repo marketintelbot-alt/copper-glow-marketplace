@@ -46,7 +46,7 @@ export default async function HomePage() {
                 Trust-first beauty bookings with a softer, more premium feel.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[color:var(--color-ink-muted)] sm:text-lg">
-                Copper Glow is a beauty and self-care marketplace designed to launch market by market.
+                Aurelle is a beauty and self-care marketplace designed to launch market by market.
                 We are opening first around {siteConfig.launchMarket.name}, with verified businesses,
                 verified independents, and polished mobile providers supported by clear trust signals,
                 clean payment choices, and booking flows that feel calm instead of chaotic.

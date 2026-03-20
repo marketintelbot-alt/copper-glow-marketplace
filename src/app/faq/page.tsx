@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     q: "How do cancellations work?",
-    a: "Copper Glow uses standardized policies only: Flexible, Standard, and Strict. Each listing shows the policy before checkout, so students know exactly what happens if they cancel close to the appointment.",
+    a: "Aurelle uses standardized policies only: Flexible, Standard, and Strict. Each listing shows the policy before checkout, so students know exactly what happens if they cancel close to the appointment.",
   },
   {
     q: "Can providers pay for better placement?",
@@ -31,7 +31,7 @@ const faqs = [
     a: "Only after a booking is marked completed. That keeps reviews tied to real appointments and helps preserve quality on a new marketplace.",
   },
   {
-    q: "Is Copper Glow only for one campus?",
+    q: "Is Aurelle only for one campus?",
     a: `No. ${siteConfig.launchMarket.name} is the current launch market, but the data model and admin tools are already structured so future schools and surrounding service areas can be added without rebuilding the platform.`,
   },
 ];
@@ -41,7 +41,7 @@ export default function FAQPage() {
     <PageShell
       eyebrow="FAQ"
       title="Straight answers for students and providers."
-      description="The launch market is intentionally trust-first, so these are the questions we expect most often as Copper Glow opens around campus."
+      description="The launch market is intentionally trust-first, so these are the questions we expect most often as Aurelle opens around campus."
     >
       <div className="grid gap-4">
         {faqs.map((item) => (

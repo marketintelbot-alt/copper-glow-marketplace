@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { addAvailabilitySlotFormAction, addProviderServiceFormAction, updateProviderProfileFormAction } from "@/actions";
 import { EmptyState } from "@/components/empty-state";
 import { FormSubmitButton } from "@/components/ui/form-submit-button";
@@ -6,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { requireProvider } from "@/lib/auth";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import { getCategories, getProviderDashboardData } from "@/lib/marketplace";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function ProviderDashboardPage() {
   const user = await requireProvider();

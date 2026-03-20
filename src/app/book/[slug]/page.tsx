@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LockKeyhole } from "lucide-react";
@@ -6,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { formatCancellationPolicy, formatCurrency, formatDateTime } from "@/lib/format";
 import { getBookingPageData } from "@/lib/marketplace";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 function single(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -60,6 +68,7 @@ export default async function BookingPage({
                 id: slot.id,
                 serviceId: slot.serviceId,
                 startsAt: slot.startsAt.toISOString(),
+                endsAt: slot.endsAt.toISOString(),
               }))}
               initialServiceId={data.selectedService?.id}
               initialSlotId={data.selectedSlot?.id}

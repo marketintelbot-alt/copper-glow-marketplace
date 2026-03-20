@@ -23,6 +23,7 @@ import { clearSession, createSession, createUserPasswordHash, requireAdmin, requ
 import { prisma } from "@/lib/db";
 import { getLaunchSchool } from "@/lib/marketplace";
 import { holdMockFunds, sendMockNotification } from "@/lib/mock-services";
+import { siteConfig } from "@/lib/site";
 import {
   adminDisputeSchema,
   adminPlacementSchema,
@@ -75,6 +76,23 @@ function zodToState(error: ZodError) {
 
 function parseString(value: FormDataEntryValue | null | undefined) {
   return typeof value === "string" ? value : "";
+}
+
+function sanitizeRedirectTarget(value?: string) {
+  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(value, "https://aurelle.local");
+    if (url.origin !== "https://aurelle.local") {
+      return undefined;
+    }
+
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return undefined;
+  }
 }
 
 function assertProviderOwner(userId: string, providerId: string) {
@@ -140,8 +158,10 @@ export async function signInAction(_: ActionState, formData: FormData): Promise<
 
     await createSession(user.id);
 
-    if (parsed.redirectTo) {
-      redirect(parsed.redirectTo);
+    const redirectTarget = sanitizeRedirectTarget(parsed.redirectTo);
+
+    if (redirectTarget) {
+      redirect(redirectTarget);
     }
 
     if (user.role === "ADMIN") {
@@ -191,7 +211,7 @@ export async function signUpAction(_: ActionState, formData: FormData): Promise<
         phone: parsed.phone,
         schoolId: school.id,
         avatarSeed: `${parsed.firstName}-${parsed.lastName}`.toLowerCase(),
-        bio: "New Copper Glow member.",
+        bio: "New Aurelle member.",
       },
     });
 
@@ -309,7 +329,7 @@ export async function createBookingAction(_: ActionState, formData: FormData): P
     const platformFeeRate = getFeeRate(provider.providerType);
     const platformFeeCents = Math.round(service.priceCents * platformFeeRate);
     const providerPayoutCents = service.priceCents - platformFeeCents;
-    const reference = `CG-${Date.now().toString().slice(-6)}`;
+    const reference = `${siteConfig.bookingReferencePrefix}-${Date.now().toString().slice(-6)}`;
 
     const mockPayment = await holdMockFunds({
       amountCents: checkout.chargeNowCents,

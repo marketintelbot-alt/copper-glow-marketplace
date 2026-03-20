@@ -1,4 +1,4 @@
-package com.copperglow.marketplace;
+package com.aurelle.marketplace;
 
 import com.getcapacitor.BridgeActivity;
 

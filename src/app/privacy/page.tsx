@@ -5,7 +5,7 @@ export default function PrivacyPage() {
   return (
     <PageShell
       eyebrow="Privacy Policy"
-      title="How Copper Glow handles data in the launch market."
+      title="How Aurelle handles data in the launch market."
       description={`This demo build uses seeded local data and mocked communication flows, but the privacy model is written as if the marketplace were operating live in its first market around ${siteConfig.launchMarket.name}.`}
     >
       <div className="grid gap-4">
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
           },
           {
             title: "Independent provider privacy",
-            body: "Copper Glow does not show exact home or apartment addresses for independents on public pages. Only approximate areas or neighborhoods are displayed before a booking is confirmed.",
+            body: "Aurelle does not show exact home or apartment addresses for independents on public pages. Only approximate areas or neighborhoods are displayed before a booking is confirmed.",
           },
           {
             title: "Reviews and trust data",

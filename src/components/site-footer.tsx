@@ -17,7 +17,7 @@ export function SiteFooter() {
         <div className="space-y-4">
           <BrandMark compact tone="footer" className="text-[rgba(255,243,247,0.94)]" />
           <p className="max-w-md text-sm leading-7 text-[rgba(255,243,247,0.72)]">
-            Copper Glow is a trust-first beauty and self-care marketplace launching first around{" "}
+            Aurelle is a trust-first beauty and self-care marketplace launching first around{" "}
             {siteConfig.launchMarket.name}, with the product and operations model built to grow into
             new campuses, neighborhoods, and cities.
           </p>

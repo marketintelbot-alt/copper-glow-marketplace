@@ -27,6 +27,10 @@ export function formatDateTime(value: Date) {
   return format(value, "EEE, MMM d • h:mm a");
 }
 
+export function formatTimeOnly(value: Date) {
+  return format(value, "h:mm a");
+}
+
 export function formatDateLabel(value: Date) {
   return format(value, "EEEE, MMMM d");
 }

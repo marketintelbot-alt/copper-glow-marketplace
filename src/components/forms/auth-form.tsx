@@ -4,10 +4,11 @@ import { useActionState, useState } from "react";
 import { signInAction, signUpAction, type ActionState } from "@/actions";
 import { FormSubmitButton } from "@/components/ui/form-submit-button";
 import { ActionMessage, FieldLabel, TextInput } from "@/components/forms/shared";
+import { siteConfig } from "@/lib/site";
 
 const demoAccounts = [
-  { label: "Student demo", email: "mia@copperglow.demo", password: "demo1234" },
-  { label: "Provider demo", email: "provider@copperglow.demo", password: "demo1234" },
+  { label: "Student demo", email: `mia@${siteConfig.demoDomain}`, password: "demo1234" },
+  { label: "Provider demo", email: `provider@${siteConfig.demoDomain}`, password: "demo1234" },
 ];
 
 type Props = {

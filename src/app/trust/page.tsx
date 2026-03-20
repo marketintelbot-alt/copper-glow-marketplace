@@ -11,7 +11,7 @@ export default async function TrustPage() {
         <SectionHeading
           eyebrow="Trust and safety"
           title="A beauty marketplace that shows why a listing feels trustworthy"
-          description="Copper Glow is designed so students can browse quickly without losing the signals that matter. Trust scores stay public, but the raw formula stays internal. Ranking rewards quality and reliability, not just paid placement."
+          description="Aurelle is designed so students can browse quickly without losing the signals that matter. Trust scores stay public, but the raw formula stays internal. Ranking rewards quality and reliability, not just paid placement."
         />
 
         <div className="grid gap-4 md:grid-cols-3">

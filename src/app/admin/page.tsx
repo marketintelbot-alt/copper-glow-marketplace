@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   resolveDisputeFormAction,
   updateFeaturedPlacementFormAction,
@@ -14,6 +15,13 @@ import {
   formatProviderType,
 } from "@/lib/format";
 import { getAdminDashboardData } from "@/lib/marketplace";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminPage() {
   await requireAdmin();
