@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRightLeft, LogOut, Menu, UserCircle2, X } from "lucide-react";
 import { useState } from "react";
 import { signOutAction } from "@/actions";
@@ -27,6 +28,7 @@ export function MobileNav({
   isAuthenticated,
   userFirstName,
 }: Props) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,7 +36,7 @@ export function MobileNav({
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 text-[color:var(--color-ink)] shadow-[0_10px_22px_rgba(54,40,35,0.08)] md:hidden"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/82 text-[color:var(--color-ink)] shadow-[0_10px_22px_rgba(54,40,35,0.08)] md:hidden"
         aria-label="Toggle navigation"
       >
         {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -52,13 +54,31 @@ export function MobileNav({
           open ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0 pointer-events-none"
         )}
       >
+        <div className="mb-4 flex items-center justify-between gap-3 border-b border-[rgba(97,58,69,0.08)] pb-4">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[color:var(--color-ink-muted)]">
+              Navigation
+            </p>
+            <p className="mt-1 text-sm text-[color:var(--color-ink-subtle)]">
+              Browse trusted beauty providers
+            </p>
+          </div>
+          <span className="rounded-full bg-white/75 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--color-accent-strong)]">
+            Live
+          </span>
+        </div>
         <nav className="flex flex-col gap-2">
           {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="rounded-2xl px-4 py-3 text-sm font-medium text-[color:var(--color-ink)] transition hover:bg-white"
+              className={cn(
+                "rounded-2xl px-4 py-3 text-sm font-medium transition",
+                (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href))
+                  ? "bg-[linear-gradient(135deg,rgba(255,241,246,0.98),rgba(246,218,229,0.94))] text-[color:var(--color-ink)] shadow-[0_14px_30px_rgba(171,83,109,0.12)]"
+                  : "text-[color:var(--color-ink)] hover:bg-white"
+              )}
             >
               {item.label}
             </Link>
@@ -97,6 +117,9 @@ export function MobileNav({
             </>
           ) : null}
         </nav>
+        <Link href="/browse" onClick={() => setOpen(false)} className="mt-4 block">
+          <Button className="w-full">Browse providers</Button>
+        </Link>
       </div>
     </>
   );

@@ -16,6 +16,14 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.5fr,1fr,1fr] lg:px-8">
         <div className="space-y-4">
           <BrandMark compact tone="footer" className="text-[rgba(255,243,247,0.94)]" />
+          <div className="flex flex-wrap gap-2">
+            <span className="rounded-full border border-white/10 bg-white/6 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(255,243,247,0.76)]">
+              Verified providers
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/6 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(255,243,247,0.76)]">
+              Trust-led ranking
+            </span>
+          </div>
           <p className="max-w-md text-sm leading-7 text-[rgba(255,243,247,0.72)]">
             Aurelle is a trust-first beauty and self-care marketplace launching first around{" "}
             {siteConfig.launchMarket.name}, with the product and operations model built to grow into

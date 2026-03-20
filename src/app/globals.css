@@ -2,6 +2,7 @@
 
 :root {
   --color-canvas: #f7dfe8;
+  --color-canvas-warm: #fff6f8;
   --color-surface: rgba(255, 243, 247, 0.92);
   --color-surface-soft: #f4d5e0;
   --color-surface-strong: #eebbcf;
@@ -15,6 +16,9 @@
   --color-olive: #9a6e86;
   --color-olive-soft: #f1e1e8;
   --color-blush-soft: #f6dde4;
+  --color-plum-deep: #2f1b25;
+  --color-champagne: #ddb58b;
+  --color-champagne-soft: rgba(221, 181, 139, 0.14);
 }
 
 @theme inline {
@@ -37,10 +41,10 @@ body {
   color: var(--color-ink);
   background-color: var(--color-canvas);
   background:
-    radial-gradient(circle at 12% 2%, rgba(255, 246, 249, 0.24), transparent 22%),
-    radial-gradient(circle at 88% 12%, rgba(224, 144, 175, 0.42), transparent 28%),
-    radial-gradient(circle at 52% 100%, rgba(198, 110, 144, 0.28), transparent 40%),
-    linear-gradient(180deg, #fbd7e4 0%, #f5cedd 46%, #f9dde8 100%);
+    radial-gradient(circle at 14% 0%, rgba(255, 247, 250, 0.82), transparent 22%),
+    radial-gradient(circle at 86% 10%, rgba(228, 152, 182, 0.42), transparent 27%),
+    radial-gradient(circle at 50% 100%, rgba(184, 97, 131, 0.22), transparent 40%),
+    linear-gradient(180deg, #fce4ec 0%, #f6d5e0 34%, #f8dce7 68%, #fff4f7 100%);
 }
 
 body::before {
@@ -48,12 +52,12 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.15;
+  opacity: 0.2;
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(171, 83, 109, 0.14) 1px, transparent 0),
-    linear-gradient(180deg, rgba(247, 214, 227, 0.18), transparent 52%);
+    radial-gradient(circle at 1px 1px, rgba(171, 83, 109, 0.12) 1px, transparent 0),
+    linear-gradient(180deg, rgba(247, 214, 227, 0.08), transparent 52%);
   background-size: 22px 22px, 100% 100%;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 92%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent 92%);
 }
 
 body::after {
@@ -62,10 +66,10 @@ body::after {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 30% 12%, rgba(255, 236, 243, 0.12), transparent 18%),
-    radial-gradient(circle at 76% 24%, rgba(215, 133, 152, 0.22), transparent 18%),
-    radial-gradient(circle at 50% 60%, rgba(238, 184, 204, 0.12), transparent 34%);
-  opacity: 0.96;
+    radial-gradient(circle at 30% 12%, rgba(255, 239, 245, 0.18), transparent 18%),
+    radial-gradient(circle at 76% 24%, rgba(215, 133, 152, 0.18), transparent 18%),
+    radial-gradient(circle at 50% 60%, rgba(238, 184, 204, 0.14), transparent 34%);
+  opacity: 0.94;
 }
 
 a {
@@ -164,6 +168,9 @@ button {
 }
 
 .editorial-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   border: 1px solid rgba(255, 255, 255, 0.7);
   background:
     linear-gradient(180deg, rgba(255, 251, 253, 0.94), rgba(244, 233, 239, 0.9));
@@ -171,6 +178,77 @@ button {
     0 24px 60px rgba(95, 46, 63, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(18px);
+}
+
+.editorial-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.52), transparent 32%),
+    radial-gradient(circle at bottom left, rgba(215, 133, 152, 0.12), transparent 28%);
+}
+
+.section-band {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.section-band > * {
+  position: relative;
+  z-index: 1;
+}
+
+.section-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.36), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(215, 133, 152, 0.12), transparent 26%);
+  opacity: 0.92;
+}
+
+.section-band--soft {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: linear-gradient(180deg, rgba(255, 250, 252, 0.9), rgba(244, 233, 239, 0.88));
+  box-shadow:
+    0 28px 72px rgba(95, 46, 63, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(18px);
+}
+
+.section-band--ivory {
+  border: 1px solid rgba(255, 250, 247, 0.82);
+  background: linear-gradient(180deg, rgba(255, 249, 246, 0.94), rgba(249, 240, 236, 0.92));
+  box-shadow:
+    0 24px 62px rgba(95, 46, 63, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.section-band--ivory::before {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.54), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(221, 181, 139, 0.16), transparent 28%);
+}
+
+.section-band--deep {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(49, 28, 37, 0.98), rgba(31, 18, 24, 0.98));
+  box-shadow:
+    0 30px 78px rgba(31, 18, 24, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.section-band--deep::before {
+  background:
+    radial-gradient(circle at top right, rgba(221, 181, 139, 0.12), transparent 26%),
+    radial-gradient(circle at bottom left, rgba(215, 133, 152, 0.18), transparent 30%);
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
